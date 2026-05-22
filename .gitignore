@@ -1,0 +1,118 @@
+# Global gitignore for embedded C++ projects (Atmega/AVR, ESP32, STM32, PlatformIO, desktop)
+
+# Build directories
+/build/
+/out/
+/bin/
+/Debug/
+/Release/
+/cmake-build-*/
+/CMakeFiles/
+CMakeCache.txt
+/cmake_install.cmake
+
+# Common object / binary files
+*.o
+*.obj
+*.elf
+*.hex
+*.bin
+*.map
+*.a
+*.so
+*.dll
+*.exe
+
+# AVR / Atmega specific
+*.eep
+*.eep.hex
+
+# ESP-IDF / ESP32
+sdkconfig
+sdkconfig.old
+sdkconfig.defaults
+/.esp-idf/
+.espressif/
+esp-idf/build/
+components/**/build/
+
+# Arduino
+*.ino.bin
+*.ino.hex
+/.archive
+
+# PlatformIO
+.pio/
+.pioenvs/
+.piolibdeps/
+.platformio/
+
+# STM32 / Cube / mbed
+*.ioc
+*.mxproject
+*.mxbuild
+/.settings/
+/.cproject
+/.project
+Debug/
+Release/
+
+# CMake/Make artifacts (local builders)
+build/
+compile_commands.json
+
+# Temporary files and logs
+*.log
+*.tmp
+*.temp
+logs/
+
+# Coverage and profiling
+coverage/
+*.gcda
+*.gcno
+*.gcov
+
+# Core dumps
+core
+core.*
+
+# IDEs and editors
+.vscode/
+.idea/
+*.code-workspace
+*.sublime-workspace
+*.sublime-project
+.project
+
+# Editor swap/backup files
+*~
+*.swp
+*.swo
+*.bak
+*.backup
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Secret and environment files
+.env
+.env.*
+secret*
+secrets.json
+
+# Python virtualenvs
+venv/
+env/
+__pycache__/
+
+# Misc caches
+*.cache
+*.pid
+
+# libros folder (user request)
+/libros/
+
+# End of file
