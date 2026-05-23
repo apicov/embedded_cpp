@@ -11,6 +11,10 @@ class ScopedLED{
     ~ScopedLED(){
       port_ &= ~(1 << pin_);
     }
+    
+    // non-copyable to avoid multiple destructors touching the same registers
+    ScopedLED(const ScopedLED&) = delete;
+    ScopedLED& operator=(const ScopedLED&) = delete;
 
   private:
     volatile uint8_t &ddr_;
@@ -22,7 +26,10 @@ class ScopedLED{
 
 
 int main() {
-  ScopedLED led(DDRB, PORTB, PB5);
-  _delay_ms(5000);
+  {
+    ScopedLED led(DDRB, PORTB, PB5);
+    _delay_ms(5000);
+  }
+  for(;;);
   return 0;
 }
