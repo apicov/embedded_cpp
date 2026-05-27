@@ -5,12 +5,21 @@
 #include <array>
 #include "CircularBuffer.hpp"
 
-template<size_t N> class ADC0;
-static ADC0<2>*  adc_instance = nullptr;
+
+class ADCBase {
+public:
+    virtual size_t num_ch() const = 0;
+    uint8_t current_channel_idx = 0;
+    virtual void store_sample(uint16_t sample) = 0;
+    virtual uint8_t channel(uint8_t idx) const = 0;
+    virtual ~ADCBase() {}
+};
+
+static ADCBase* adc_instance = nullptr;
 
 
 template<size_t N>
-class ADC0{
+class ADC0: public ADCBase {
   public:
     // public for ISR access — intentional
     static constexpr size_t num_channels = N;
@@ -52,11 +61,30 @@ class ADC0{
       TCCR1B &= ~(1 << CS11);
     }
 
+    size_t num_ch() const override{
+      return N;
+    }
+
+    uint8_t channel(uint8_t idx) const override{
+      return channels_[idx];
+    } 
+
     size_t read(uint8_t channel, uint16_t* output, size_t length) {
         return buffers_[channel].pop(output, length);
     }
 
-    ~ADC0(){
+    void store_sample(uint16_t sample) override{
+      // Store sample in the buffer for the current channel
+      buffers_[current_channel_idx].push(&sample, 1);
+
+      // Move to next channel
+      current_channel_idx = (current_channel_idx + 1) % N;
+
+      // Switch ADMUX to next channel for the next conversion
+      ADMUX = (1 << REFS0) | (channels_[current_channel_idx] & 0x0F);
+    }
+
+    ~ADC0() override {
       stop();
       TCCR1B = 0; //resets timer mode
       ADMUX = 0; // resets channel selection
