@@ -13,7 +13,7 @@ ISR(ADC_vect) {
     uint16_t sample = ADC;
 
     if (adc_instance) {
-        adc_instance->store_sample(ADC);
+      adc_instance->store_sample(sample);
     }
 }
 

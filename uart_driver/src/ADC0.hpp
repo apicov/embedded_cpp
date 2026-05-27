@@ -3,6 +3,7 @@
 #include <avr/io.h>
 #include <avr/interrupt.h>
 #include <array>
+#include "cstdio"
 #include "CircularBuffer.hpp"
 
 
@@ -15,7 +16,7 @@ public:
     virtual ~ADCBase() {}
 };
 
-static ADCBase* adc_instance = nullptr;
+extern ADCBase* adc_instance;
 
 
 template<size_t N>
@@ -82,6 +83,26 @@ class ADC0: public ADCBase {
 
       // Switch ADMUX to next channel for the next conversion
       ADMUX = (1 << REFS0) | (channels_[current_channel_idx] & 0x0F);
+
+      if (samples_requested_){
+          samples_collected_++;
+          if(samples_collected_ == samples_requested_){
+            stop();
+            data_ready = true;
+            samples_requested_ = 0;
+          }
+        }
+    }
+
+    void take(size_t n){
+      data_ready = false;
+      samples_requested_ = n;
+      samples_collected_ = 0;
+      start();
+    }
+
+    bool is_ready(){
+      return data_ready;
     }
 
     ~ADC0() override {
@@ -93,5 +114,8 @@ class ADC0: public ADCBase {
     }
   private:
     uint8_t current_channel_;
+    size_t samples_requested_ = 0; 
+    size_t samples_collected_ = 0;
+    volatile bool   data_ready = false;
 };
 
