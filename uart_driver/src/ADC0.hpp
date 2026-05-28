@@ -105,6 +105,10 @@ class ADC0: public ADCBase {
       return data_ready;
     }
 
+    uint16_t peek_last(size_t channel){
+      return buffers_[channel].peek_last();
+    }
+
     ~ADC0() override {
       stop();
       TCCR1B = 0; //resets timer mode

@@ -18,6 +18,7 @@ public:
     bool is_full() const;
     bool is_empty() const;
     void clear();
+    T peek_last();
 
 private:
     T buffer_[N];
@@ -76,6 +77,12 @@ size_t CircularBuffer<T, N>::pop(T* output, size_t length)
     full_ = false; // After popping, the buffer cannot be full
     return elements_to_pop; // Return the number of elements popped
 }
+
+template <typename T, size_t N>
+T CircularBuffer<T, N>::peek_last(){
+  return buffer_[head_];  
+}
+
 
 template <typename T, size_t N>
 size_t CircularBuffer<T, N>::element_count() const
