@@ -2,8 +2,11 @@
 #include <avr/interrupt.h>
 #include "ADC0.hpp"
 
-constexpr uint16_t LED_REFRESH_COUNTS = 800;   // 20Hz
-constexpr uint16_t PEAK_DECAY_COUNTS  = 16000;  // 1Hz
+constexpr uint16_t TIMER_RATE = 8000;  
+constexpr uint16_t LED_REFRESH_HZ = 20;
+constexpr uint16_t LED_REFRESH_COUNTS = TIMER_RATE / LED_REFRESH_HZ;
+constexpr uint16_t PEAK_DECAY_HZ = 1;
+constexpr uint16_t PEAK_DECAY_COUNTS  = TIMER_RATE / PEAK_DECAY_HZ;  
 
 extern volatile bool refresh_leds_flag;
 uint16_t refresh_leds_counter = 0;
