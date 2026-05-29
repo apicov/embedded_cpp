@@ -40,6 +40,8 @@ int main(){
 
   mics.take(0); //continuous sampling
 
+  uint8_t peak_level = 0;
+
   for(;;){
     if(refresh_leds_flag){
       //adc value 0-1023 //channel 0 in this case
@@ -48,12 +50,21 @@ int main(){
       int16_t centered = (int16_t)sample - 256;
       uint16_t amplitude = abs(centered);
       uint8_t level = amplitude >> 5;  // divide by 32, gives 0-7
+
+      if (level > peak_level) {
+        peak_level = level;
+      }
       
       for (uint8_t i = 0; i < 8; i++) {
-        if (i <= level) {
+        if (i < level) {
           // LED on
           pixels[i*3 + 0] = 0;    // Green
           pixels[i*3 + 1] = 30;  // Red
+          pixels[i*3 + 2] = 0;    // Blue
+
+        } else if (i == peak_level) {
+          pixels[i*3 + 0] = 30;    // Green
+          pixels[i*3 + 1] = 0;  // Red
           pixels[i*3 + 2] = 0;    // Blue
 
         } else {
@@ -72,7 +83,7 @@ int main(){
     }
 
     if(peak_decay_flag){
-
+      if(peak_level > 0) peak_level--;
       peak_decay_flag = false;
     }
   }

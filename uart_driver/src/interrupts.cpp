@@ -3,7 +3,7 @@
 #include "ADC0.hpp"
 
 constexpr uint16_t LED_REFRESH_COUNTS = 800;   // 20Hz
-constexpr uint16_t PEAK_DECAY_COUNTS  = 1600;  // 10Hz
+constexpr uint16_t PEAK_DECAY_COUNTS  = 16000;  // 1Hz
 
 extern volatile bool refresh_leds_flag;
 uint16_t refresh_leds_counter = 0;
